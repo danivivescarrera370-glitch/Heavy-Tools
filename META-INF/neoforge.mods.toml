@@ -1,0 +1,19 @@
+# file: src/main/resources/META-INF/neoforge.mods.toml
+modLoader="javafml"
+loaderVersion="[2,)"
+license="MIT"
+
+[[mods]]
+modId="heavytools"
+version="1.0.0"
+displayName="Heavy Tools Mod"
+authors="AetherByte"
+description="Adds heavy variants of the Axe, Pickaxe, and Hoe utilizing the mechanics of the Mace."
+
+[[dependencies.heavytools]]
+modId="neoforge"
+type="required"
+versionRange="[21,)"
+ordering="NONE"
+side="BOTH"
+
