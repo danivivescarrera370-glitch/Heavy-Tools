@@ -5,15 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VideoStream Portal</title>
     <style>
+        :root {
+            --bg-color: #f9f9f9;
+            --card-bg: #fff;
+            --text-color: #111;
+            --sub-text: #606060;
+            --border-color: #e5e5e5;
+            --hover-color: #f2f2f2;
+            --primary-color: #ff0000;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f0f0f;
+            --card-bg: #212121;
+            --text-color: #fff;
+            --sub-text: #aaa;
+            --border-color: #3d3d3d;
+            --hover-color: #383838;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: Arial, sans-serif;
+            transition: background-color 0.2s, color 0.2s;
         }
         body {
-            background-color: #f9f9f9;
-            color: #111;
+            background-color: var(--bg-color);
+            color: var(--text-color);
         }
         /* Header */
         header {
@@ -21,8 +41,8 @@
             justify-content: space-between;
             align-items: center;
             padding: 10px 20px;
-            background-color: #fff;
-            border-bottom: 1px solid #e5e5e5;
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
             position: fixed;
             top: 0;
             left: 0;
@@ -30,10 +50,23 @@
             height: 60px;
             z-index: 100;
         }
+        .header-left, .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .menu-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--text-color);
+            cursor: pointer;
+        }
         .logo {
             font-size: 20px;
             font-weight: bold;
-            color: #ff0000;
+            color: var(--primary-color);
+            text-decoration: none;
         }
         .search-bar {
             display: flex;
@@ -42,16 +75,38 @@
         .search-bar input {
             width: 100%;
             padding: 8px 12px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-color);
+            color: var(--text-color);
             border-radius: 2px 0 0 2px;
             outline: none;
         }
         .search-bar button {
             padding: 8px 16px;
-            background-color: #f8f8f8;
-            border: 1px solid #ccc;
+            background-color: var(--hover-color);
+            border: 1px solid var(--border-color);
             border-left: none;
+            color: var(--text-color);
             border-radius: 0 2px 2px 0;
+            cursor: pointer;
+        }
+        .upload-btn {
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .upload-btn:hover {
+            opacity: 0.9;
+        }
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 20px;
             cursor: pointer;
         }
         /* Layout & Main Container */
@@ -61,41 +116,71 @@
         }
         sidebar {
             width: 240px;
-            background-color: #fff;
+            background-color: var(--card-bg);
             height: calc(100vh - 60px);
             position: fixed;
             padding: 15px;
-            border-right: 1px solid #e5e5e5;
+            border-right: 1px solid var(--border-color);
+            z-index: 90;
+        }
+        sidebar.hide {
+            display: none;
         }
         sidebar a {
             display: block;
             padding: 10px 12px;
-            color: #333;
+            color: var(--text-color);
             text-decoration: none;
             margin-bottom: 5px;
             border-radius: 4px;
         }
         sidebar a:hover {
-            background-color: #f2f2f2;
+            background-color: var(--hover-color);
         }
-        /* Content Grid */
+        /* Content Workspace */
         .content {
             margin-left: 240px;
             padding: 20px;
-            width: calc(100% - 240px);
+            width: 100%;
+            transition: margin-left 0.2s;
         }
+        .content.full-width {
+            margin-left: 0;
+        }
+        /* Categories Workspace Bar */
+        .category-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        .category-chip {
+            background-color: var(--hover-color);
+            color: var(--text-color);
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 14px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            white-space: nowrap;
+        }
+        .category-chip.active {
+            background-color: var(--text-color);
+            color: var(--card-bg);
+        }
+        /* Content Grid */
         .video-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
         }
         .video-card {
-            background-color: #fff;
+            background-color: var(--card-bg);
             border-radius: 8px;
             overflow: hidden;
-            border: 1px solid #eaeaea;
+            border: 1px solid var(--border-color);
         }
-        /* HTML5 Native Video Player */
         video {
             width: 100%;
             height: 180px;
@@ -110,28 +195,31 @@
             font-size: 15px;
             font-weight: bold;
             margin-bottom: 6px;
-            color: #111;
         }
         .video-channel {
             font-size: 13px;
-            color: #606060;
+            color: var(--sub-text);
             margin-bottom: 2px;
         }
         .video-meta {
             font-size: 13px;
-            color: #606060;
+            color: var(--sub-text);
         }
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
             sidebar {
-                display: none;
+                transform: translateX(-100%);
+                transition: transform 0.2s;
+                display: block;
+            }
+            sidebar.show-mobile {
+                transform: translateX(0);
             }
             .content {
                 margin-left: 0;
-                width: 100%;
             }
             .search-bar {
-                width: 60%;
+                display: none; /* Hides search on small devices for header layout space */
             }
         }
     </style>
@@ -139,63 +227,106 @@
 <body>
 
     <header>
-        <div class="logo">VideoStream</div>
-        <div class="search-bar">
-            <input type="text" placeholder="Search">
-            <button>🔍</button>
+        <div class="header-left">
+            <button class="menu-btn" id="menuToggle">☰</button>
+            <a href="#" class="logo">VideoStream</a>
         </div>
-        <div>User</div>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search videos by title or channel...">
+            <button id="searchBtn">🔍</button>
+        </div>
+        <div class="header-right">
+            <!-- File inputs are ugly by default, so we hide it and trigger it via the button -->
+            <input type="file" id="videoFileInput" accept="video/mp4,video/webm" style="display: none;">
+            <button class="upload-btn" onclick="document.getElementById('videoFileInput').click()">➕ Upload</button>
+            <button class="theme-toggle" id="themeToggle">🌙</button>
+        </div>
     </header>
 
     <div class="main-container">
-        <sidebar>
+        <sidebar id="sidebar">
             <a href="#">🏠 Home</a>
             <a href="#">🔥 Trending</a>
             <a href="#">📁 Subscriptions</a>
             <a href="#">📚 Library</a>
         </sidebar>
 
-        <div class="content">
-            <div class="video-grid">
-                <!-- Video Card 1 -->
-                <div class="video-card">
-                    <video controls preload="metadata">
-                        <source src="movie1.mp4" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                    <div class="video-info">
-                        <div class="video-title">Building a Modern Website from Scratch</div>
-                        <div class="video-channel">DevChannel</div>
-                        <div class="video-meta">12K views • 2 days ago</div>
-                    </div>
-                </div>
-                <!-- Video Card 2 -->
-                <div class="video-card">
-                    <video controls preload="metadata">
-                        <source src="movie2.mp4" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                    <div class="video-info">
-                        <div class="video-title">Understanding HTML and CSS Grids</div>
-                        <div class="video-channel">CodeSchool</div>
-                        <div class="video-meta">45K views • 1 week ago</div>
-                    </div>
-                </div>
-                <!-- Video Card 3 -->
-                <div class="video-card">
-                    <video controls preload="metadata">
-                        <source src="movie3.mp4" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                    <div class="video-info">
-                        <div class="video-title">Top Cloud Hosting Tips</div>
-                        <div class="video-channel">TechInsights</div>
-                        <div class="video-meta">8.4K views • 5 hours ago</div>
-                    </div>
-                </div>
+        <div class="content" id="contentArea">
+            <!-- Category Chips Filter Workspace Layout -->
+            <div class="category-bar" id="categoryBar">
+                <div class="category-chip active" data-category="all">All</div>
+                <div class="category-chip" data-category="coding">Coding</div>
+                <div class="category-chip" data-category="design">Design</div>
+                <div class="category-chip" data-category="cloud">Cloud Tech</div>
+                <div class="category-chip" data-category="user">My Uploads</div>
+            </div>
+
+            <div class="video-grid" id="videoGrid">
+                <!-- Content injected dynamically via Javascript -->
             </div>
         </div>
     </div>
 
-</body>
-</html>
+    <script>
+        // 1. Core Data Application State
+        let activeCategory = 'all';
+        let searchQuery = '';
+
+        const videoDatabase = [
+            {
+                id: 1,
+                title: "Building a Modern Website from Scratch",
+                channel: "DevChannel",
+                views: "12K",
+                timeAgo: "2 days ago",
+                videoUrl: "movie1.mp4",
+                category: "coding"
+            },
+            {
+                id: 2,
+                title: "Understanding HTML and CSS Grids",
+                channel: "CodeSchool",
+                views: "45K",
+                timeAgo: "1 week ago",
+                videoUrl: "movie2.mp4",
+                category: "design"
+            },
+            {
+                id: 3,
+                title: "Top Cloud Hosting Tips for 2026",
+                channel: "TechInsights",
+                views: "8.4K",
+                timeAgo: "5 hours ago",
+                videoUrl: "movie3.mp4",
+                category: "cloud"
+            },
+            {
+                id: 4,
+                title: "JavaScript Basics in 10 Minutes",
+                channel: "DevChannel",
+                views: "90K",
+                timeAgo: "3 days ago",
+                videoUrl: "movie4.mp4",
+                category: "coding"
+            }
+        ];
+
+        // 2. Render Process Engine
+        function filterAndRenderFeed() {
+            const videoGrid = document.getElementById('videoGrid');
+            videoGrid.innerHTML = '';
+
+            // Apply joint filtration criteria rules
+            const filteredArray = videoDatabase.filter(video => {
+                const matchesCategory = (activeCategory === 'all') || (video.category === activeCategory);
+                const matchesSearch = video.title.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+
+            // Render the filtered videos
+            filteredArray.forEach(video => {
+                const videoCard = createVideoCard(video);
+                videoGrid.appendChild(videoCard);
+            });
+        }
+    
