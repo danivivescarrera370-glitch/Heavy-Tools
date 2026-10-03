@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Video Portal with Discover</title>
+    <link rel="stylesheet" href="microsoft-style.css">
+    <script src="theme.js" defer></script>
+    <style>
+        .video-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .like-btn {
+            background: var(--hover-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 4px 10px;
+            border-radius: var(--card-radius);
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .like-btn.liked {
+            background-color: var(--accent-blue);
+            color: #ffffff;
+            border-color: var(--accent-blue);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <a href="#" class="logo">Microsoft Stream</a>
+        </div>
+        <div class="search-bar">
+            <!-- Bound Search Field -->
+            <input type="text" id="searchInput" placeholder="Search videos or channels...">
+            <button id="searchBtn">🔍</button>
+        </div>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
+    </header>
+
+    <div class="main-container">
+        <!-- Sidebar with Unique IDs for State Switching -->
+        <sidebar id="navigationSidebar">
+            <a href="#" id="navHome" class="active">🏠 Home</a>
+            <a href="#" id="navDiscover">🔥 Discover</a>
+            <a href="#" id="navContent">📁 My Content</a>
+            <a href="#" id="navPlaylists">📚 Playlists</a>
+        </sidebar>
+
+        <div class="content">
+            <div class="video-grid" id="videoGrid"></div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Unified Video Database Array
+        const videoData = [
+            { id: 1, title: "Q3 Global All-Hands Meeting & Strategy Roadmap", channel: "Corporate Communications", views: "3.4K", time: "2 days ago", src: "movie1.mp4", likes: 142, userLiked: false, category: "home" },
+            { id: 2, title: "Introduction to Azure Blob Storage & File Systems", channel: "Cloud Engineering Team", views: "852", time: "1 week ago", src: "movie2.mp4", likes: 58, userLiked: false, category: "discover" },
+            { id: 3, title: "Microsoft Power Pages Architecture Tutorial", channel: "Digital Workspace Hub", views: "1.2K", time: "3 weeks ago", src: "movie3.mp4", likes: 96, userLiked: false, category: "discover" }
+        ];
+
+        // Global state tracking variable
+        let currentTab = "home";
+
+        // 2. Optimized Render Pipeline
+        function displayVideos() {
+            const grid = document.getElementById('videoGrid');
+            const searchInput = document.getElementById('searchInput');
+            const term = searchInput.value.toLowerCase();
+            
+            grid.innerHTML = '';
+            
+            // Filters based on search term AND chosen layout tab category parameters
+            const filteredVideos = videoData.filter(video => {
+                const matchesSearch = video.title.toLowerCase().includes(term) || video.channel.toLowerCase().includes(term);
+                
+                if (currentTab === "discover") {
+                    // Discover shows EVERYTHING available across the database matching search query
+                    return matchesSearch;
+                } else {
+                    // Home tab shows only specific default category elements
+                    return matchesSearch && video.category === currentTab;
+                }
+            });
+
+            if (filteredVideos.length === 0) {
+                grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--sub-text)">No results found.</p>`;
+                return;
+            }
+            
+            filteredVideos.forEach(video => {
+                const likedClass = video.userLiked ? 'liked' : '';
+                grid.innerHTML += `
+                    <div class="video-card">
+                        <div class="video-wrapper">
+                            <video controls preload="metadata">
+                                <source src="${video.src}" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="video-info">
+                            <a href="#" class="video-title">${video.title}</a>
+                            <div class="video-channel">${video.channel}</div>
+                            <div class="video-meta">${video.views} views • ${video.time}</div>
+                            <div class="video-actions">
+                                <button class="like-btn ${likedClass}" onclick="handleLike(${video.id})">
+                                    👍 <span id="like-count-${video.id}">${video.likes}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // 3. Like Controller Mutation Hook
+        function handleLike(id) {
+            const targetVideo = videoData.find(v => v.id === id);
+            if (!targetVideo) return;
+
+            if (targetVideo.userLiked) {
+                targetVideo.likes -= 1;
+                targetVideo.userLiked = false;
+            } else {
+                targetVideo.likes += 1;
+                targetVideo.userLiked = true;
+            }
+            displayVideos();
+        }
+
+        // ==========================================================================
+        // 4. INTERACTIVE SEARCH & NAVIGATION ARCHITECTURE
+        // ==========================================================================
+        
+        // Handle search key entries in real time
+        document.getElementById('searchInput').addEventListener('input', displayVideos);
+
+        // Sidebar Navigation Event Handler Setup
+        function setupNavigation() {
+            const navLinks = document.querySelectorAll('#navigationSidebar a');
+            const searchInput = document.getElementById('searchInput');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    // Visual active class node reassignment
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+
+                    // Map specific tag clicks to state indicators
+                    if (link.id === 'navHome') {
+                        currentTab = "home";
+                    } else if (link.id === 'navDiscover') {
+                        currentTab = "discover";
+                        searchInput.value = ''; // Clears search keyword context when hitting discover channel
+                        searchInput.focus();   // Puts cursor inside field input space immediately
+                    } else if (link.id === 'navContent') {
+                        currentTab = "content";
+                    } else if (link.id === 'navPlaylists') {
+                        currentTab = "playlists";
+                    }
+
+                    displayVideos();
+                });
+            });
+        }
+
+        // Initialize display cycles on browser boot
+        document.addEventListener('DOMContentLoaded', () => {
+            setupNavigation();
+            displayVideos();
+        });
+        // Create videos button click like microsoft clipchamp
+        let createVideoBtn = document.createElement('button');
+        createVideoBtn.textContent = "Create Video";
+        createVideoBtn.style.position = "fixed";
+        createVideoBtn.style.bottom = "20px";
+        createVideoBtn.style.right = "20px";
+        createVideoBtn.style.padding = "10px 20px";
+
+        createVideoBtn.addEventListener('click', () => {
+            alert("This would open the video creation interface.");
+        });
+        let title = document.querySelector('title');
+        title.textContent = "";
+        let header = document.querySelector('header');
+        header.appendChild(createVideoBtn);
+        // open file explorer to select a video file and add it to the videoData array
+        createVideoBtn.addEventListener('click', () => {  
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'video/*';
+            input.onchange = e => { 
+                const file = e.target.files[0]; 
+                if (file) {
+                    const newVideo = {
+                        id: videoData.length + 1,
+                        title: file.name,
+                        channel: "User Uploads",
+                        views: "0",
+                        time: "Just now",
+                        src: URL.createObjectURL(file),
+                        likes: 0,
+                        userLiked: false,
+                        category: currentTab
+                    };
+                    videoData.push(newVideo);
+                    displayVideos();
+                }
+            }
+            input.click();
+            // Subscribe Microsoft Stream Premium users to a new video upload notification system
+            alert("Microsoft Stteam Premium Free Trial: You are now subscribed to receive notifications for new video uploads.");
+            microsoftStreamPremiumNotificationSystem.subscribeToNewUploads();
+            if (microsoftStreamPremiumNotificationSystem.isSubscribed()) {
+                console.log("User is subscribed to new video upload notifications.");
+            } else {
+                console.log("User is not subscribed to new video upload notifications.");
+            }
+            document.addEventListener('DOMContentLoaded', () => {
+                microsoftStreamPremiumNotificationSystem.subscribeToNewUploads();
+            });
+            let trialPeriod = 14; // days
+            let trialEndDate = new Date();
+            trialEndDate.setDate(trialEndDate.getDate() + trialPeriod);
+            console.log(`Microsoft Stream Premium Free Trial: Your trial will end on ${trialEndDate.toDateString()}.`);
+            // Features available during the trial period
+            const premiumFeatures = [
+                "Ad-free experience",
+                "Advanced analytics for your videos",
+                "Priority support",
+                "Access to premium content and features",
+                "Download videos for offline viewing",
+                "Enhanced security and privacy controls",
+                "integration with Microsoft Teams and other Microsoft 365 apps",
+            ];
+            StreamPremiumTrialManager.startTrial(trialPeriod, premiumFeatures);
+            function logPremiumFeatures() {
+                console.log("Microsoft Stream Premium Free Trial Features:");
+                premiumFeatures.forEach((feature, index) => {
+                    console.log(`${index + 1}. ${feature}`);
+                });
+            }
+        }); 
+    </script>
+</body>
+</html>

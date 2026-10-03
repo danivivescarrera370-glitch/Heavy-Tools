@@ -1,0 +1,253 @@
+/* ==========================================================================
+   1. MICROSOFT FLUENT DESIGN TOKENS
+   ========================================================================== */
+:root {
+    --bg-color: #f3f3f3;          /* Windows 11 Settings Background */
+    --card-bg: #ffffff;          /* Fluent Surface White */
+    --text-color: #242424;       /* Segoe UI Primary Dark Text */
+    --sub-text: #5f5f5f;         /* Secondary Text Label */
+    --border-color: #e0e0e0;     /* Subtle Surface Outline */
+    --hover-color: #edebe9;      /* Office Hover Highlight */
+    --accent-blue: #0078d4;      /* Classic Microsoft Azure/Windows Blue */
+    --card-radius: 6px;          /* Fluent standard rounded corner token */
+}
+
+/* Persistent Fluent Dark Mode Overrides */
+[data-theme="dark"] {
+    --bg-color: #202020;          /* Windows Mica Dark Background */
+    --card-bg: #2d2d2d;          /* Fluent Acrylic Dark Surface */
+    --text-color: #ffffff;
+    --sub-text: #adadad;
+    --border-color: #3b3b3b;
+    --hover-color: #333333;
+    --accent-blue: #2899f5;
+}
+
+/* ==========================================================================
+   2. GLOBAL LAYOUT ENGINE (Segoe UI Optimization)
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* Enforces official Windows / Microsoft System font stacks */
+    font-family: "Segoe UI", "Segoe UI Web (West European)", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    overflow-x: hidden;
+}
+
+/* ==========================================================================
+   3. WINDOWS MODULE / HEADER MASTERBAR
+   ========================================================================== */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    background-color: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 48px; /* Slightly more compact enterprise header */
+    z-index: 100;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.logo {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-color);
+    text-decoration: none;
+    letter-spacing: -0.2px;
+}
+
+/* Fluent Search Box Architecture */
+.search-bar {
+    display: flex;
+    width: 35%;
+    max-width: 480px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 6px 12px;
+    font-size: 13px;
+    border: 1px solid var(--border-color);
+    border-bottom: 2px solid var(--border-color); /* Microsoft interactive bottom border edge */
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border-radius: var(--card-radius) 0 0 var(--card-radius);
+    outline: none;
+}
+
+.search-bar input:focus {
+    border-bottom-color: var(--accent-blue); /* Highlights primary action status */
+}
+
+.search-bar button {
+    padding: 6px 16px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-bottom: 2px solid var(--border-color);
+    border-left: none;
+    color: var(--text-color);
+    border-radius: 0 var(--card-radius) var(--card-radius) 0;
+    cursor: pointer;
+}
+
+.search-bar button:hover {
+    background-color: var(--hover-color);
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: var(--card-radius);
+    color: var(--text-color);
+}
+
+.theme-toggle:hover {
+    background-color: var(--hover-color);
+}
+
+/* ==========================================================================
+   4. SEAMLESS FLUENT NAVIGATION SIDEBAR
+   ========================================================================== */
+.main-container {
+    display: flex;
+    margin-top: 48px;
+}
+
+sidebar {
+    width: 260px;
+    background-color: var(--bg-color); /* Matches workspace background for Fluent blending */
+    height: calc(100vh - 48px);
+    position: fixed;
+    top: 48px;
+    left: 0;
+    padding: 16px 8px;
+    overflow-y: auto;
+}
+
+sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 8px 12px;
+    color: var(--text-color);
+    text-decoration: none;
+    margin-bottom: 2px;
+    border-radius: var(--card-radius);
+    font-size: 14px;
+    font-weight: 400;
+}
+
+sidebar a:hover {
+    background-color: var(--hover-color);
+}
+
+/* Microsoft Stream-like Active State */
+sidebar a.active {
+    background-color: var(--card-bg);
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    border-left: 3px solid var(--accent-blue);
+}
+
+/* ==========================================================================
+   5. ENTERPRISE CONTAINER GRID & ELEVATED FLUENT CARDS
+   ========================================================================== */
+.content {
+    margin-left: 260px;
+    padding: 32px;
+    width: 100%;
+}
+
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 24px;
+}
+
+/* Fluent Elevated Content Surface Card */
+.video-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04); /* Subtle Fluent soft-shadow drop */
+}
+
+.video-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Interactive rise projection */
+    border-color: #c8c6c4;
+}
+
+[data-theme="dark"] .video-card:hover {
+    border-color: #555555;
+}
+
+/* 16:9 Aspect Video Window block */
+.video-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+    background-color: #111111;
+}
+
+.video-wrapper video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.video-info {
+    padding: 16px; /* Enhanced internal padding architecture for enterprise apps */
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.video-title {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.video-title:hover {
+    color: var(--accent-blue);
+}
+
+.video-channel {
+    font-size: 12px;
+    color: var(--sub-text);
+}
+
+.video-meta {
+    font-size: 12px;
+    color: var(--sub-text);
+    margin-top: 2px;
+}
+
