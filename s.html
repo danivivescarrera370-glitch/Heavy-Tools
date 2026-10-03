@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VideoStream Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background-color: #f9f9f9;
+            color: #111;
+        }
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            z-index: 100;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff0000;
+        }
+        .search-bar {
+            display: flex;
+            width: 40%;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 2px 0 0 2px;
+            outline: none;
+        }
+        .search-bar button {
+            padding: 8px 16px;
+            background-color: #f8f8f8;
+            border: 1px solid #ccc;
+            border-left: none;
+            border-radius: 0 2px 2px 0;
+            cursor: pointer;
+        }
+        /* Layout & Main Container */
+        .main-container {
+            display: flex;
+            margin-top: 60px;
+        }
+        sidebar {
+            width: 240px;
+            background-color: #fff;
+            height: calc(100vh - 60px);
+            position: fixed;
+            padding: 15px;
+            border-right: 1px solid #e5e5e5;
+        }
+        sidebar a {
+            display: block;
+            padding: 10px 12px;
+            color: #333;
+            text-decoration: none;
+            margin-bottom: 5px;
+            border-radius: 4px;
+        }
+        sidebar a:hover {
+            background-color: #f2f2f2;
+        }
+        /* Content Grid */
+        .content {
+            margin-left: 240px;
+            padding: 20px;
+            width: calc(100% - 240px);
+        }
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        .video-card {
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #eaeaea;
+        }
+        /* HTML5 Native Video Player */
+        video {
+            width: 100%;
+            height: 180px;
+            background-color: #000;
+            display: block;
+            object-fit: cover;
+        }
+        .video-info {
+            padding: 12px;
+        }
+        .video-title {
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111;
+        }
+        .video-channel {
+            font-size: 13px;
+            color: #606060;
+            margin-bottom: 2px;
+        }
+        .video-meta {
+            font-size: 13px;
+            color: #606060;
+        }
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            sidebar {
+                display: none;
+            }
+            .content {
+                margin-left: 0;
+                width: 100%;
+            }
+            .search-bar {
+                width: 60%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">VideoStream</div>
+        <div class="search-bar">
+            <input type="text" placeholder="Search">
+            <button>🔍</button>
+        </div>
+        <div>User</div>
+    </header>
+
+    <div class="main-container">
+        <sidebar>
+            <a href="#">🏠 Home</a>
+            <a href="#">🔥 Trending</a>
+            <a href="#">📁 Subscriptions</a>
+            <a href="#">📚 Library</a>
+        </sidebar>
+
+        <div class="content">
+            <div class="video-grid">
+                <!-- Video Card 1 -->
+                <div class="video-card">
+                    <video controls preload="metadata">
+                        <source src="movie1.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="video-info">
+                        <div class="video-title">Building a Modern Website from Scratch</div>
+                        <div class="video-channel">DevChannel</div>
+                        <div class="video-meta">12K views • 2 days ago</div>
+                    </div>
+                </div>
+                <!-- Video Card 2 -->
+                <div class="video-card">
+                    <video controls preload="metadata">
+                        <source src="movie2.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="video-info">
+                        <div class="video-title">Understanding HTML and CSS Grids</div>
+                        <div class="video-channel">CodeSchool</div>
+                        <div class="video-meta">45K views • 1 week ago</div>
+                    </div>
+                </div>
+                <!-- Video Card 3 -->
+                <div class="video-card">
+                    <video controls preload="metadata">
+                        <source src="movie3.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="video-info">
+                        <div class="video-title">Top Cloud Hosting Tips</div>
+                        <div class="video-channel">TechInsights</div>
+                        <div class="video-meta">8.4K views • 5 hours ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
