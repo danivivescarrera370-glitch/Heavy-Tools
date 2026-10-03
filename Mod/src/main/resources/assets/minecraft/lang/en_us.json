@@ -1,4 +1,8 @@
 {
   "item.minecraft.mace": "Heavy Sword",
-  "item.minecraft.breeze_rod": "Incomplete Heavy Sword"
+  "item.minecraft.breeze_rod": "Incomplete Heavy Sword",
+  "item.minecraft.heavy_axe": "Heavy Axe",
+  "item.minecraft.heavy_hoe": "Heavy Hoe",
+  "item.minecraft.heavy_pickaxe": "Heavy Pickaxe",
+  "item.minecraft.heavy_shovel": "Heavy Shovel"
 }
