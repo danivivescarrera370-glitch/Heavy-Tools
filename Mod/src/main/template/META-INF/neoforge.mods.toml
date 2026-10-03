@@ -1,4 +1,3 @@
-# file: src/main/resources/META-INF/neoforge.mods.toml
 modLoader="javafml"
 loaderVersion="[2,)"
 license="MIT"
@@ -17,3 +16,9 @@ versionRange="[21,)"
 ordering="NONE"
 side="BOTH"
 
+[[dependencies.heavytools]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="BOTH"
